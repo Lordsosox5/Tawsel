@@ -1,6 +1,6 @@
-# [Project name]
+# Tawsel
 
-_Replace the heading above with the project's name, and this line with one sentence describing what this app does for users._
+An Arabic-first food, grocery, and pharmacy delivery experience built for Khartoum.
 
 ## Run & Operate
 
@@ -22,23 +22,30 @@ _Replace the heading above with the project's name, and this line with one sente
 
 ## Where things live
 
-_Populate as you build — short repo map plus pointers to the source-of-truth file for DB schema, API contracts, theme files, etc._
+- `artifacts/tawsel-app` — the web experience, including the shared app shell, routes, local catalog data, and theme.
+- `artifacts/tawsel-mobile` — the native mobile companion with the same Tawsel discovery and ordering surface.
+- `artifacts/api-server` — the shared Express API service.
+- `lib/api-spec/openapi.yaml` — the API contract source of truth.
+- `lib/db/src/schema` — the Drizzle database schema.
 
 ## Architecture decisions
 
-_Populate as you build — non-obvious choices a reader couldn't infer from the code (3-5 bullets)._
+- The web app uses Wouter with a shared shell so desktop navigation and the mobile bottom bar stay consistent across routes.
+- Arabic and English copy live beside the local catalog data, and the active language controls document direction at the app root.
+- Cart and favorites persist in local storage so the preview remains useful without an account or backend seed data.
 
 ## Product
 
-_Describe the high-level user-facing capabilities of this app once they exist._
+Tawsel helps people in Khartoum discover nearby restaurants, groceries, and pharmacy essentials, save favorite places, build a basket, preview checkout, track active orders, and manage language and notification preferences.
 
 ## User preferences
 
-_Populate as you build — explicit user instructions worth remembering across sessions._
+No additional preferences recorded.
 
 ## Gotchas
 
-_Populate as you build — sharp edges, "always run X before Y" rules._
+- The web artifact's Vite config expects `PORT` and `BASE_PATH` from its managed workflow; use the Tawsel web workflow for runtime verification.
+- If API contracts change, regenerate the clients with `pnpm --filter @workspace/api-spec run codegen` before consuming new hooks.
 
 ## Pointers
 
