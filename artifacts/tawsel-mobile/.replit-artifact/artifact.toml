@@ -1,0 +1,24 @@
+kind = "mobile"
+previewPath = "/mobile/"
+title = "Tawsel Mobile"
+description = "A native mobile companion for Tawsel, bringing Khartoum food, grocery, and pharmacy delivery to a fast, touch-first experience with discovery, cart, orders, and account settings."
+version = "1.0.0"
+id = "artifacts/tawsel-mobile"
+router = "expo-domain"
+
+[[services]]
+name = "expo"
+ensurePreviewReachable = "/status"
+paths = [ "/mobile/" ]
+localPort = 25612
+
+[services.development]
+run = "pnpm --filter @workspace/tawsel-mobile run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/tawsel-mobile", "run", "build" ]
+run = [ "pnpm", "--filter", "@workspace/tawsel-mobile", "run", "serve" ]
+
+[services.env]
+PORT = "25612"
+BASE_PATH = "/mobile/"
