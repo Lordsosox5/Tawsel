@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "Tawsel"
+description = "An Arabic-first food and grocery delivery app for browsing nearby restaurants and stores, discovering offers, adding items to a cart, and tracking orders."
+version = "1.0.0"
+id = "artifacts/tawsel-app"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 25549
+
+[services.development]
+run = "pnpm --filter @workspace/tawsel-app run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/tawsel-app", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/tawsel-app/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "25549"
+BASE_PATH = "/"
