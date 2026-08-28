@@ -5,7 +5,7 @@ import { Toaster } from '@/components/ui/toaster';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import NotFound from '@/pages/not-found';
 import { TawselProvider } from '@/components/tawsel-shell';
-import { AccountPage, CartPage, HomePage, OrdersPage, SearchPage } from '@/pages/tawsel-pages';
+import { AccountPage, CartPage, HomePage, OrdersPage, ProductPage, ProductsPage, SearchPage } from '@/pages/tawsel-pages';
 import {
   Route,
   Switch,
@@ -23,6 +23,8 @@ function Router() {
       <Switch>
          <Route path="/" component={HomePage} />
          <Route path="/search" component={SearchPage} />
+         <Route path="/products" component={ProductsPage} />
+         <Route path="/products/:id" component={ProductPage} />
          <Route path="/cart" component={CartPage} />
          <Route path="/orders" component={OrdersPage} />
          <Route path="/account" component={AccountPage} />

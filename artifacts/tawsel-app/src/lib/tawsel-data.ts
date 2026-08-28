@@ -24,10 +24,13 @@ export type Product = {
   name: string;
   arabicName: string;
   venue: string;
+  category: Exclude<Category, 'all'>;
   price: number;
   unit: string;
   tone: string;
   image?: string;
+  description: string;
+  arabicDescription: string;
 };
 
 export const venues: Venue[] = [
@@ -40,12 +43,12 @@ export const venues: Venue[] = [
 ];
 
 export const products: Product[] = [
-  { id: 'wrap', name: 'Classic chicken wrap', arabicName: 'سندوتش دجاج كلاسيك', venue: 'Shawarema Station', price: 11.5, unit: 'each', tone: 'from-[#ebbd82] via-[#cf6333] to-[#832d22]', image: heroShawarma },
-  { id: 'fatteh', name: 'Sudanese fatteh', arabicName: 'فتة سودانية', venue: 'Balah Kitchen', price: 14, unit: 'plate', tone: 'from-[#dfb66b] via-[#a8532c] to-[#6c3227]' },
-  { id: 'juice', name: 'Mango juice', arabicName: 'عصير مانجو', venue: 'Balah Kitchen', price: 6.5, unit: 'bottle', tone: 'from-[#f7d477] via-[#e98c2b] to-[#b94b22]' },
-  { id: 'apples', name: 'Red apples', arabicName: 'تفاح أحمر', venue: 'Fresh Basket', price: 8.75, unit: '1 kg', tone: 'from-[#df7667] via-[#bd3c32] to-[#7f2525]' },
-  { id: 'bread', name: 'Kisra bread', arabicName: 'خبز كسرة', venue: 'Soukna Market', price: 5, unit: 'pack', tone: 'from-[#f2d49a] via-[#c9984e] to-[#8e572e]' },
-  { id: 'soap', name: 'Palmolive soap', arabicName: 'صابون بالموليف', venue: 'Soukna Market', price: 13, unit: 'pack', tone: 'from-[#a8d6c4] via-[#4c9a7d] to-[#276158]' },
+  { id: 'wrap', name: 'Classic chicken wrap', arabicName: 'سندوتش دجاج كلاسيك', venue: 'Shawarema Station', category: 'restaurants', price: 11.5, unit: 'each', tone: 'from-[#ebbd82] via-[#cf6333] to-[#832d22]', image: heroShawarma, description: 'Char-grilled chicken, crisp salad, and our house garlic sauce wrapped fresh to order.', arabicDescription: 'دجاج مشوي على الفحم، سلطة طازجة، وصوص الثوم الخاص ملفوفة طازة عند الطلب.' },
+  { id: 'fatteh', name: 'Sudanese fatteh', arabicName: 'فتة سودانية', venue: 'Balah Kitchen', category: 'restaurants', price: 14, unit: 'plate', tone: 'from-[#dfb66b] via-[#a8532c] to-[#6c3227]', description: 'Warm kisra, chickpeas, and tangy yoghurt finished with a drizzle of sesame sauce.', arabicDescription: 'كسرة دافئة، حمص، وزبادي حامض مع رشة من صوص السمسم.' },
+  { id: 'juice', name: 'Mango juice', arabicName: 'عصير مانجو', venue: 'Balah Kitchen', category: 'restaurants', price: 6.5, unit: 'bottle', tone: 'from-[#f7d477] via-[#e98c2b] to-[#b94b22]', description: 'A chilled, pulpy mango blend made for the walk home or the table.', arabicDescription: 'عصير مانجو بارد ومليان لب، مناسب للمشوار أو للسفرة.' },
+  { id: 'apples', name: 'Red apples', arabicName: 'تفاح أحمر', venue: 'Fresh Basket', category: 'groceries', price: 8.75, unit: '1 kg', tone: 'from-[#df7667] via-[#bd3c32] to-[#7f2525]', description: 'Crisp, sweet red apples selected from today’s fresh produce delivery.', arabicDescription: 'تفاح أحمر مقرمش وحلو، مختار من خضار وفاكهة اليوم.' },
+  { id: 'bread', name: 'Kisra bread', arabicName: 'خبز كسرة', venue: 'Soukna Market', category: 'groceries', price: 5, unit: 'pack', tone: 'from-[#f2d49a] via-[#c9984e] to-[#8e572e]', description: 'Soft fermented kisra bread, packed for an easy family meal.', arabicDescription: 'خبز كسرة طري ومخمر، معبأ عشان وجبة عائلية سهلة.' },
+  { id: 'soap', name: 'Palmolive soap', arabicName: 'صابون بالموليف', venue: 'Soukna Market', category: 'groceries', price: 13, unit: 'pack', tone: 'from-[#a8d6c4] via-[#4c9a7d] to-[#276158]', description: 'A gentle everyday soap pack for the whole household.', arabicDescription: 'صابون يومي لطيف ومناسب لكل البيت.' },
 ];
 
 export type CartLine = { productId: string; quantity: number };

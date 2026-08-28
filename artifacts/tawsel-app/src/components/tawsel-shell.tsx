@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import { createContext, useContext, useEffect, useMemo, useState, type Dispatch, type SetStateAction } from 'react';
 import { Link, useLocation } from 'wouter';
 import { ArrowLeft, ArrowRight, Bell, Bike, Heart, Home, Menu, Search, ShoppingBag, ShoppingBasket, UserRound, Utensils, Plus, Languages, ReceiptText } from 'lucide-react';
 import { categories, formatPrice, initialCart, products, type CartLine, type Language } from '@/lib/tawsel-data';
@@ -7,7 +7,7 @@ type TawselContextValue = {
   language: Language;
   setLanguage: (language: Language) => void;
   cart: CartLine[];
-  addToCart: (productId: string) => void;
+  addToCart: (productId: string, quantity?: number) => void;
   changeQuantity: (productId: string, delta: number) => void;
   removeFromCart: (productId: string) => void;
   favorites: string[];
@@ -18,7 +18,7 @@ type TawselContextValue = {
 
 const TawselContext = createContext<TawselContextValue | null>(null);
 
-const useStored = <T,>(key: string, fallback: T): [T, (value: T) => void] => {
+const useStored = <T,>(key: string, fallback: T): [T, Dispatch<SetStateAction<T>>] => {
   const [value, setValue] = useState<T>(() => {
     try { return JSON.parse(localStorage.getItem(key) || 'null') ?? fallback; } catch { return fallback; }
   });
@@ -42,14 +42,17 @@ export function TawselProvider({ children }: { children: React.ReactNode }) {
     language,
     setLanguage,
     cart,
-    addToCart: (productId) => {
-      setCart(cart.map((item) => item.productId === productId ? { ...item, quantity: item.quantity + 1 } : item).some((item) => item.productId === productId)
-        ? cart.map((item) => item.productId === productId ? { ...item, quantity: item.quantity + 1 } : item)
-        : [...cart, { productId, quantity: 1 }]);
+    addToCart: (productId, quantity = 1) => {
+      setCart((currentCart) => {
+        const existing = currentCart.find((item) => item.productId === productId);
+        return existing
+          ? currentCart.map((item) => item.productId === productId ? { ...item, quantity: item.quantity + quantity } : item)
+          : [...currentCart, { productId, quantity }];
+      });
       setToast(language === 'ar' ? 'تمت الإضافة إلى السلة' : 'Added to your basket');
     },
-    changeQuantity: (productId, delta) => setCart(cart.map((item) => item.productId === productId ? { ...item, quantity: item.quantity + delta } : item).filter((item) => item.quantity > 0)),
-    removeFromCart: (productId) => setCart(cart.filter((item) => item.productId !== productId)),
+    changeQuantity: (productId, delta) => setCart((currentCart) => currentCart.map((item) => item.productId === productId ? { ...item, quantity: item.quantity + delta } : item).filter((item) => item.quantity > 0)),
+    removeFromCart: (productId) => setCart((currentCart) => currentCart.filter((item) => item.productId !== productId)),
     favorites,
     toggleFavorite: (id) => {
       setFavorites(favorites.includes(id) ? favorites.filter((item) => item !== id) : [...favorites, id]);
@@ -166,7 +169,7 @@ export function VenueCard({ venue }: { venue: typeof import('@/lib/tawsel-data')
 export function ProductCard({ product }: { product: typeof products[number] }) {
   const { language, cart, addToCart } = useTawsel();
   const line = cart.find((item) => item.productId === product.id);
-  return <article data-testid={`card-product-${product.id}`} className="group relative overflow-hidden rounded-[20px] border border-border bg-card shadow-warm-sm transition-all hover:-translate-y-1 hover:shadow-warm"><ProductMark product={product} className="h-[130px] w-full rounded-none" /><div className="p-3.5"><p className="font-arabic text-[13px] font-bold leading-snug">{copy(language, product.name, product.arabicName)}</p><p className="mt-1 text-[10px] text-muted-foreground">{product.venue}</p><div className="mt-3 flex items-center justify-between"><div><strong className="font-mono text-xs">{formatPrice(product.price, language)}</strong><span className="ml-1 text-[10px] text-muted-foreground">/ {product.unit}</span></div><button onClick={() => addToCart(product.id)} data-testid={`button-add-product-${product.id}`} className="grid h-8 w-8 place-items-center rounded-full bg-primary text-primary-foreground transition-transform hover:scale-110 active:scale-95">{line ? <span className="font-mono text-[11px] font-bold">{line.quantity}</span> : <Plus size={15} />}</button></div></div></article>;
+  return <article data-testid={`card-product-${product.id}`} className="group relative overflow-hidden rounded-[20px] border border-border bg-card shadow-warm-sm transition-all hover:-translate-y-1 hover:shadow-warm"><Link href={`/products/${product.id}`} data-testid={`link-product-${product.id}`} className="block"><ProductMark product={product} className="h-[130px] w-full rounded-none" /><div className="p-3.5 pr-12"><p className="font-arabic text-[13px] font-bold leading-snug">{copy(language, product.name, product.arabicName)}</p><p className="mt-1 text-[10px] text-muted-foreground">{product.venue}</p><div className="mt-3"><strong className="font-mono text-xs">{formatPrice(product.price, language)}</strong><span className="ml-1 text-[10px] text-muted-foreground">/ {product.unit}</span></div></div></Link><button onClick={() => addToCart(product.id)} data-testid={`button-add-product-${product.id}`} aria-label={copy(language, `Add ${product.name} to basket`, `أضف ${product.arabicName} للسلة`)} className="absolute bottom-3.5 right-3.5 grid h-8 w-8 place-items-center rounded-full bg-primary text-primary-foreground transition-transform hover:scale-110 active:scale-95">{line ? <span className="font-mono text-[11px] font-bold">{line.quantity}</span> : <Plus size={15} />}</button></article>;
 }
 
 export { copy };
