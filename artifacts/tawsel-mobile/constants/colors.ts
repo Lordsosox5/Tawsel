@@ -49,6 +49,15 @@ const colors = {
     heroText: '#fffaf2',
     heroSoft: '#f8dcd0',
     heroKicker: '#ffc6ad',
+    restaurantStart: '#f4b083',
+    restaurantEnd: '#bc3d27',
+    groceryStart: '#b8d1ad',
+    groceryEnd: '#467362',
+    pharmacyStart: '#b5d9dd',
+    pharmacyEnd: '#367582',
+    categoryRestaurant: '#f9ddd5',
+    categoryGrocery: '#e4ecd9',
+    categoryPharmacy: '#dbecee',
 
     // Borders and input outlines
     border: '#e2d8cb',

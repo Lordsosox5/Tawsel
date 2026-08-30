@@ -16,21 +16,44 @@ export function AppScreen({ children, scroll = true }: { children: React.ReactNo
   return <View style={[styles.screen, { backgroundColor: colors.background }]}>{scroll ? <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingTop: insets.top + 12 }}>{content}</ScrollView> : content}</View>;
 }
 
-export function AppHeader({ title, eyebrow }: { title?: string; eyebrow?: string }) {
+export function AppHeader({
+  title,
+  eyebrow,
+  showBrand = false,
+  showBack = false,
+  showCart = true,
+}: {
+  title?: string;
+  eyebrow?: string;
+  showBrand?: boolean;
+  showBack?: boolean;
+  showCart?: boolean;
+}) {
   const router = useRouter();
   const colors = useColors();
   const { language, cartCount } = useTawsel();
+  const goBack = () => (router.canGoBack() ? router.back() : router.replace('/'));
   return <View style={styles.header}>
-    <Pressable onPress={() => router.push('/')} accessibilityRole="button" testID="mobile-logo" style={styles.logoButton}>
+    {showBrand ? <Pressable onPress={() => router.push('/')} accessibilityRole="button" testID="mobile-logo" style={styles.logoButton}>
       <View style={[styles.logoMark, { backgroundColor: colors.primary }]}><Ionicons name="bicycle" size={20} color={colors.primaryForeground} /></View>
       <View><Text style={[styles.logo, { color: colors.foreground }]}>tawsel.</Text><Text style={[styles.logoSub, { color: colors.mutedForeground }]}>{language === 'ar' ? 'الخرطوم، السودان' : 'KHARTOUM, SUDAN'}</Text></View>
-    </Pressable>
+    </Pressable> : showBack ? <View style={styles.headerTitleGroup}>
+      <Pressable onPress={goBack} accessibilityRole="button" accessibilityLabel={language === 'ar' ? 'رجوع' : 'Go back'} testID="mobile-header-back" style={styles.headerBackButton}>
+        <Feather name="arrow-left" size={17} color={colors.foreground} />
+      </Pressable>
+      <View style={styles.headerTitle}>
+        {eyebrow && <Text style={[styles.headerEyebrow, { color: colors.primary }]}>{eyebrow}</Text>}
+        {title && <Text style={[styles.headerText, { color: colors.foreground }]} numberOfLines={1}>{title}</Text>}
+      </View>
+    </View> : <View style={[styles.headerTitle, styles.headerTitleStandalone]}>
+      {eyebrow && <Text style={[styles.headerEyebrow, { color: colors.primary }]}>{eyebrow}</Text>}
+      {title && <Text style={[styles.headerText, { color: colors.foreground }]} numberOfLines={1}>{title}</Text>}
+    </View>}
     <View style={styles.headerRight}>
-      {title && <View style={styles.headerTitle}><Text style={[styles.headerEyebrow, { color: colors.primary }]}>{eyebrow}</Text><Text style={[styles.headerText, { color: colors.foreground }]}>{title}</Text></View>}
-      <Pressable onPress={() => router.push('/cart')} accessibilityRole="button" testID="mobile-header-cart" style={[styles.iconButton, { backgroundColor: colors.primary }]}>
+      {showCart && <Pressable onPress={() => router.push('/cart')} accessibilityRole="button" testID="mobile-header-cart" style={[styles.iconButton, { backgroundColor: colors.primary }]}>
         <Ionicons name="bag-handle-outline" size={18} color={colors.primaryForeground} />
         {cartCount > 0 && <View style={[styles.count, { backgroundColor: colors.accent, borderColor: colors.background }]}><Text style={[styles.countText, { color: colors.accentForeground }]}>{cartCount}</Text></View>}
-      </Pressable>
+      </Pressable>}
     </View>
   </View>;
 }
@@ -48,9 +71,9 @@ export function CategoryChips({ active }: { active?: Category }) {
   </ScrollView>;
 }
 
-export function ProductArt({ product, height = 142 }: { product: Product; height?: number }) {
+export function ProductArt({ product, height = 142, width }: { product: Product; height?: number; width?: number }) {
   const colors = useColors();
-  return <LinearGradient colors={toneColors[product.tone]} style={[styles.productArt, { height }]}>
+  return <LinearGradient colors={toneColors[product.tone]} style={[styles.productArt, { height, width }]}>
     {product.image ? <Image source={product.image} contentFit="cover" style={StyleSheet.absoluteFillObject} /> : <View style={[styles.artDot, { backgroundColor: colors.card }]} />}
     <View style={[styles.artMark, { backgroundColor: colors.card }]} />
   </LinearGradient>;
@@ -77,7 +100,7 @@ export function VenueCard({ venue }: { venue: Venue }) {
   const colors = useColors();
   const { language } = useTawsel();
   return <Pressable onPress={() => router.push({ pathname: '/shop/[id]', params: { id: venue.id } })} testID={`mobile-venue-${venue.id}`} style={[styles.venueCard, { backgroundColor: colors.card, borderColor: colors.border }]} accessibilityRole="button">
-    <LinearGradient colors={venue.kind === 'groceries' ? ['#b8d1ad', '#467362'] : venue.kind === 'pharmacy' ? ['#b5d9dd', '#367582'] : ['#f4b083', '#bc3d27']} style={styles.venueArt}>
+    <LinearGradient colors={venue.kind === 'groceries' ? [colors.groceryStart, colors.groceryEnd] : venue.kind === 'pharmacy' ? [colors.pharmacyStart, colors.pharmacyEnd] : [colors.restaurantStart, colors.restaurantEnd]} style={styles.venueArt}>
       {venue.image ? <Image source={venue.image} contentFit="cover" style={StyleSheet.absoluteFillObject} /> : <Text style={[styles.venueInitial, { color: colors.card }]}>{venue.initials}</Text>}
       <View style={[styles.rating, { backgroundColor: colors.card }]}><Text style={[styles.ratingText, { color: colors.foreground }]}>★ {venue.rating}</Text></View>
     </LinearGradient>
@@ -99,16 +122,19 @@ export const styles = StyleSheet.create({
   logo: { fontSize: 19, fontWeight: '800', letterSpacing: -0.7 },
   logoSub: { fontSize: 7, fontWeight: '700', letterSpacing: 1.1, marginTop: 1 },
   headerRight: { flexDirection: 'row', alignItems: 'center', gap: 10 },
-  headerTitle: { alignItems: 'flex-end', marginRight: 2 },
+  headerTitleGroup: { flex: 1, flexDirection: 'row', alignItems: 'center', gap: 11 },
+  headerTitle: { flexShrink: 1 },
+  headerTitleStandalone: { flex: 1 },
+  headerBackButton: { width: 38, height: 38, borderRadius: 19, alignItems: 'center', justifyContent: 'center' },
   headerEyebrow: { fontSize: 8, fontWeight: '800', letterSpacing: 1.1 },
-  headerText: { fontSize: 12, fontWeight: '700', marginTop: 2 },
+  headerText: { fontSize: 18, fontWeight: '800', letterSpacing: -0.35, marginTop: 2 },
   iconButton: { width: 42, height: 42, borderRadius: 21, alignItems: 'center', justifyContent: 'center' },
   count: { position: 'absolute', right: -2, top: -2, minWidth: 18, height: 18, paddingHorizontal: 4, borderRadius: 9, alignItems: 'center', justifyContent: 'center', borderWidth: 2 },
   countText: { fontSize: 9, fontWeight: '800' },
   chips: { gap: 8, paddingVertical: 6, paddingRight: 8 },
   chip: { paddingHorizontal: 16, paddingVertical: 10, borderRadius: 22, borderWidth: 1 },
   chipText: { fontSize: 12, fontWeight: '700' },
-  productArt: { overflow: 'hidden', borderTopLeftRadius: 18, borderTopRightRadius: 18, justifyContent: 'center', alignItems: 'center' },
+  productArt: { overflow: 'hidden', borderRadius: 18, justifyContent: 'center', alignItems: 'center' },
   artDot: { width: 26, height: 26, borderRadius: 13, opacity: 0.28 },
   artMark: { position: 'absolute', width: 5, height: 5, borderRadius: 3, top: 16, right: 20, opacity: 0.28 },
   productCard: { width: 178, borderRadius: 18, borderWidth: 1, overflow: 'hidden', marginRight: 10, position: 'relative' },
