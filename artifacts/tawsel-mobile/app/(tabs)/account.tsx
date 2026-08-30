@@ -1,0 +1,19 @@
+import { Feather, Ionicons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
+import React from 'react';
+import { Pressable, Text, View } from 'react-native';
+import { AppHeader, AppScreen, styles } from '@/components/tawsel-ui';
+import { useColors } from '@/hooks/useColors';
+import { useTawsel } from '@/components/tawsel-context';
+
+export default function AccountScreen() {
+  const router = useRouter();
+  const colors = useColors();
+  const { language, setLanguage, cartCount } = useTawsel();
+  const rows = [
+    { icon: 'location-outline' as const, title: language === 'ar' ? 'العناوين المحفوظة' : 'Saved addresses', detail: language === 'ar' ? 'الرياض · البيت' : 'Al Riyadh · Home', action: () => router.push('/cart') },
+    { icon: 'heart-outline' as const, title: language === 'ar' ? 'الأماكن المفضلة' : 'Favourite places', detail: language === 'ar' ? 'شوف مطاعمك المحفوظة' : 'Browse saved places', action: () => router.push('/shop') },
+    { icon: 'card-outline' as const, title: language === 'ar' ? 'طرق الدفع' : 'Payment methods', detail: language === 'ar' ? 'الدفع عند الاستلام' : 'Cash on delivery', action: () => router.push('/cart') },
+  ];
+  return <AppScreen><AppHeader title={language === 'ar' ? 'حسابك' : 'Account'} eyebrow={language === 'ar' ? 'توصل' : 'YOUR TAWSEL'} /><View style={[styles.profile, { backgroundColor: colors.card, borderColor: colors.border }]}><View style={[styles.profileAvatar, { backgroundColor: colors.primary }]}><Text style={[styles.profileAvatarText, { color: colors.primaryForeground }]}>أ</Text></View><View style={styles.profileCopy}><Text style={[styles.profileName, { color: colors.foreground }]}>{language === 'ar' ? 'أحمد محمد' : 'Ahmed Mohamed'}</Text><Text style={[styles.profilePhone, { color: colors.mutedForeground }]}>+249 912 345 678</Text></View><Pressable onPress={() => router.push('/cart')} testID="mobile-account-edit"><Feather name="edit-2" size={17} color={colors.mutedForeground} /></Pressable></View><View style={styles.accountRows}>{rows.map((row) => <Pressable key={row.title} onPress={row.action} testID={`mobile-account-${row.title}`} style={[styles.accountRow, { backgroundColor: colors.card, borderColor: colors.border }]}><View style={[styles.accountIcon, { backgroundColor: colors.secondary }]}><Ionicons name={row.icon} size={19} color={colors.primary} /></View><View style={styles.accountRowCopy}><Text style={[styles.accountTitle, { color: colors.foreground }]}>{row.title}</Text><Text style={[styles.accountDetail, { color: colors.mutedForeground }]}>{row.detail}</Text></View><Feather name="chevron-right" size={18} color={colors.mutedForeground} /></Pressable>)}</View><View style={[styles.preferenceCard, { backgroundColor: colors.secondary }]}><Text style={[styles.eyebrow, { color: colors.primary }]}>{language === 'ar' ? 'التفضيلات' : 'PREFERENCES'}</Text><Pressable onPress={() => setLanguage(language === 'ar' ? 'en' : 'ar')} style={styles.preferenceRow} testID="mobile-account-language"><Ionicons name="language-outline" size={20} color={colors.primary} /><View style={styles.accountRowCopy}><Text style={[styles.accountTitle, { color: colors.foreground }]}>{language === 'ar' ? 'اللغة' : 'Language'}</Text><Text style={[styles.accountDetail, { color: colors.mutedForeground }]}>{language === 'ar' ? 'العربية' : 'English'}</Text></View><Text style={[styles.changeText, { color: colors.primary }]}>{language === 'ar' ? 'English' : 'العربية'}</Text></Pressable><View style={[styles.preferenceRow, { borderTopWidth: 1, borderColor: colors.border }]}><Ionicons name="bag-handle-outline" size={20} color={colors.primary} /><View style={styles.accountRowCopy}><Text style={[styles.accountTitle, { color: colors.foreground }]}>{language === 'ar' ? 'أصناف في السلة' : 'Items in basket'}</Text><Text style={[styles.accountDetail, { color: colors.mutedForeground }]}>{cartCount}</Text></View></View></View></AppScreen>;
+}

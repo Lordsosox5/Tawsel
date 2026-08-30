@@ -13,6 +13,7 @@ import {
 } from '@expo-google-fonts/inter';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
+import { TawselProvider } from '@/components/tawsel-context';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -23,6 +24,9 @@ function RootLayoutNav() {
   return (
     <Stack screenOptions={{ headerBackTitle: 'Back' }}>
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen name="product/[id]" options={{ headerShown: false }} />
+        <Stack.Screen name="shop/[id]" options={{ headerShown: false }} />
+        <Stack.Screen name="cart/index" options={{ headerShown: false }} />
     </Stack>
   );
 }
@@ -47,11 +51,13 @@ export default function RootLayout() {
     <SafeAreaProvider>
       <ErrorBoundary>
         <QueryClientProvider client={queryClient}>
+          <TawselProvider>
           <GestureHandlerRootView>
             <KeyboardProvider>
               <RootLayoutNav />
             </KeyboardProvider>
           </GestureHandlerRootView>
+          </TawselProvider>
         </QueryClientProvider>
       </ErrorBoundary>
     </SafeAreaProvider>

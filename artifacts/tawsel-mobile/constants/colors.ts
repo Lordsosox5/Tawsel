@@ -16,44 +16,48 @@ const colors = {
   light: {
     // Legacy aliases (kept for backward compatibility)
     text: '#0a0a0a',
-    tint: '#2f95dc',
+    tint: '#d9262c',
 
     // Core surfaces
-    background: '#ffffff',
-    foreground: '#0a0a0a',
+    background: '#f7f3ed',
+    foreground: '#3a2521',
 
     // Cards / elevated surfaces
-    card: '#f9f9f9',
-    cardForeground: '#0a0a0a',
+    card: '#fffdfa',
+    cardForeground: '#3a2521',
 
     // Primary action color (buttons, links, active states)
-    primary: '#2f95dc',
-    primaryForeground: '#ffffff',
+    primary: '#d9262c',
+    primaryForeground: '#fffaf2',
 
     // Secondary / less-emphasis interactive surfaces
-    secondary: '#f0f0f0',
-    secondaryForeground: '#1a1a1a',
+    secondary: '#efe6d9',
+    secondaryForeground: '#3a2521',
 
     // Muted / subdued elements (dividers, timestamps, placeholders)
-    muted: '#f0f0f0',
-    mutedForeground: '#737373',
+    muted: '#eee8df',
+    mutedForeground: '#806f68',
 
     // Accent highlights (badges, selected items, focus rings)
-    accent: '#f0f0f0',
-    accentForeground: '#1a1a1a',
+    accent: '#e9a52d',
+    accentForeground: '#3a2521',
 
     // Destructive actions (delete, error states)
     destructive: '#ef4444',
     destructiveForeground: '#ffffff',
+    success: '#39734d',
+    heroText: '#fffaf2',
+    heroSoft: '#f8dcd0',
+    heroKicker: '#ffc6ad',
 
     // Borders and input outlines
-    border: '#e5e5e5',
-    input: '#e5e5e5',
+    border: '#e2d8cb',
+    input: '#e2d8cb',
   },
 
   // Border radius (in px). Sync from the sibling web artifact's --radius
   // CSS variable. This value applies to cards, buttons, inputs, and modals.
-  radius: 8,
+  radius: 22,
 };
 
 export default colors;

@@ -1,30 +1,16 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
+import React from 'react';
+import { Pressable, ScrollView, Text, View } from 'react-native';
+import { categories, products, venues } from '@/constants/catalog';
+import { useColors } from '@/hooks/useColors';
+import { AppHeader, AppScreen, CategoryChips, ProductCard, SectionTitle, VenueCard, styles } from '@/components/tawsel-ui';
+import { useTawsel } from '@/components/tawsel-context';
 
-export default function TabOneScreen() {
-  return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Replit Agent is building...</Text>
-      <Text style={styles.text}>
-        Your app will appear here once it's ready.
-      </Text>
-    </View>
-  );
+export default function HomeScreen() {
+  const router = useRouter();
+  const colors = useColors();
+  const { language } = useTawsel();
+  return <AppScreen><AppHeader /><View style={[styles.hero, { backgroundColor: colors.primary }]}><View style={styles.heroCopy}><Text style={[styles.heroKicker, { color: colors.heroKicker }]}>{language === 'ar' ? 'توصيل الحلة' : 'LOCAL DELIVERY'}</Text><Text style={[styles.heroTitle, { color: colors.heroText }]}>{language === 'ar' ? 'الحلو قريب منك.' : 'Good things, close by.'}</Text><Text style={[styles.heroBody, { color: colors.heroSoft }]}>{language === 'ar' ? 'أكلك ومقاضيك، من الأماكن البتحبها في الخرطوم.' : 'Your favourite food and essentials, delivered across Khartoum.'}</Text><Pressable onPress={() => router.push('/shop')} testID="mobile-hero-shop" style={[styles.heroButton, { backgroundColor: colors.accent }]}><Text style={[styles.heroButtonText, { color: colors.accentForeground }]}>{language === 'ar' ? 'تسوق الآن' : 'Shop now'}</Text><Ionicons name="arrow-forward" size={16} color={colors.accentForeground} /></Pressable></View><View style={[styles.heroOrb, { borderColor: colors.accent }]}><Ionicons name="bicycle" size={65} color={colors.primaryForeground} /></View></View><SectionTitle eyebrow={language === 'ar' ? 'ابدأ من هنا' : 'START HERE'} title={language === 'ar' ? 'شنو محتاج؟' : 'What do you need?'} /><ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.categoryRow}>{categories.map((category) => <Pressable key={category.id} onPress={() => router.push({ pathname: '/shop', params: { category: category.id } })} testID={`mobile-home-category-${category.id}`} style={[styles.categoryCard, { backgroundColor: colors.card, borderColor: colors.border }]}><View style={[styles.categoryIcon, { backgroundColor: category.id === 'restaurants' ? colors.secondary : category.id === 'groceries' ? colors.secondary : colors.muted }]}><Ionicons name={category.id === 'restaurants' ? 'restaurant-outline' : category.id === 'groceries' ? 'basket-outline' : 'add-circle-outline'} size={22} color={colors.primary} /></View><Text style={[styles.categoryText, { color: colors.foreground }]}>{language === 'ar' ? category.arabicLabel : category.label}</Text></Pressable>)}</ScrollView><SectionTitle eyebrow={language === 'ar' ? 'يستاهل' : 'WORTH THE WAIT'} title={language === 'ar' ? 'الأكثر طلباً حولك' : 'Popular around you'} action={language === 'ar' ? 'شوف الكل' : 'See all'} onAction={() => router.push('/shop')} /><ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.horizontalRow}>{venues.slice(0, 4).map((venue) => <VenueCard key={venue.id} venue={venue} />)}</ScrollView><SectionTitle eyebrow={language === 'ar' ? 'إضافة سريعة' : 'QUICK ADD'} title={language === 'ar' ? 'أكلات وأساسيات' : 'Dishes & essentials'} action={language === 'ar' ? 'شوف الكل' : 'Shop all'} onAction={() => router.push('/shop')} /><ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.horizontalRow}>{products.map((product) => <ProductCard key={product.id} product={product} />)}</ScrollView><View style={[styles.promise, { backgroundColor: colors.secondary }]}><Ionicons name="shield-checkmark-outline" size={24} color={colors.primary} /><View style={styles.promiseCopy}><Text style={[styles.promiseTitle, { color: colors.foreground }]}>{language === 'ar' ? 'وعد توصل' : 'The Tawsel promise'}</Text><Text style={[styles.promiseBody, { color: colors.mutedForeground }]}>{language === 'ar' ? 'أسعار واضحة، وتحديثات مستمرة، وتوصيل من ناس الحلة.' : 'Clear prices, live updates, and local couriers who care.'}</Text></View></View></AppScreen>;
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 8,
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  text: {
-    fontSize: 16,
-    textAlign: 'center',
-    paddingHorizontal: 20,
-  },
-});
