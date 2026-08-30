@@ -6,6 +6,7 @@ import { AppHeader, AppScreen, CategoryChips, ProductCard, styles as uiStyles, V
 import { categoryLabels, products, venues, type Category } from '@/constants/catalog';
 import { useColors } from '@/hooks/useColors';
 import { useTawsel } from '@/components/tawsel-context';
+import { fonts } from '@/constants/fonts';
 
 export default function ShopScreen() {
   const { language } = useTawsel();
@@ -22,15 +23,15 @@ export default function ShopScreen() {
 
 const shopStyles = StyleSheet.create({
   keyboard: { flex: 1 },
-  title: { fontSize: 29, fontWeight: '800', letterSpacing: -1, marginTop: 10 },
-  subtitle: { fontSize: 13, lineHeight: 19, marginTop: 8, marginBottom: 18 },
+  title: { fontFamily: fonts.bold, fontSize: 29, fontWeight: '800', letterSpacing: -1, marginTop: 10 },
+  subtitle: { fontFamily: fonts.regular, fontSize: 13, lineHeight: 19, marginTop: 8, marginBottom: 18 },
   search: { height: 52, borderRadius: 17, borderWidth: 1, paddingHorizontal: 15, flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: 4 },
-  input: { flex: 1, fontSize: 14 },
+  input: { flex: 1, fontFamily: fonts.regular, fontSize: 14 },
   resultHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 24, marginBottom: 13 },
-  cartText: { fontSize: 12, fontWeight: '800' },
+  cartText: { fontFamily: fonts.bold, fontSize: 12, fontWeight: '800' },
   productGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
   venueList: { marginTop: 12, gap: 12 },
   empty: { borderRadius: 22, alignItems: 'center', padding: 34, marginTop: 20 },
-  emptyTitle: { fontSize: 17, fontWeight: '800', marginTop: 11 },
-  emptyBody: { fontSize: 12, marginTop: 6, textAlign: 'center' },
+  emptyTitle: { fontFamily: fonts.bold, fontSize: 17, fontWeight: '800', marginTop: 11 },
+  emptyBody: { fontFamily: fonts.regular, fontSize: 12, marginTop: 6, textAlign: 'center' },
 });
